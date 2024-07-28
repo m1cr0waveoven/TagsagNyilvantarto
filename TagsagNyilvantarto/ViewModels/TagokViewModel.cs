@@ -4,20 +4,20 @@ using System.Dynamic;
 using System.Text;
 using System.Threading.Tasks;
 using TagsagNyilvantarto.Models;
-using System.Diagnostics.CodeAnalysis;
 
 namespace TagsagNyilvantarto.ViewModels
 {
-    internal sealed class TagokViewModel : Screen
+    internal class TagokViewModel : Screen
     {
-        private readonly DataAccess _dataAccess;
-        private readonly IWindowManager _windowManager;
-        private readonly IMsgBoxService _msgBoxService;
+        private FilterValues _selectedFilterValues;
+        private DataAccess _dataAccess;
+        private IWindowManager _windowManager;
+        private IMsgBoxService _msgBoxService;
         private DataView _tagok;
         private DataRowView _selectedRow;
-        public FilterValues SelectedFilterValues { get; set; }
+        public FilterValues SelectedFilterValues { get => _selectedFilterValues; set => _selectedFilterValues = value; }
         public DataView Tagok { get => _tagok; set => _ = Set(ref _tagok, value); }
-        public DataAccess DataAccess { get => _dataAccess; }
+        public DataAccess DataAccess { get => _dataAccess; private set => _dataAccess = value; }
         public DataRowView SelectedRow { get => _selectedRow; set => _ = Set(ref _selectedRow, value); }
 
         public TagokViewModel(IWindowManager windowManager, IMsgBoxService msgBoxService, DataAccess dataAccess)
@@ -25,141 +25,139 @@ namespace TagsagNyilvantarto.ViewModels
             _dataAccess = dataAccess;
             _windowManager = windowManager;
             _msgBoxService = msgBoxService;
-            SelectedFilterValues = new FilterValues(); // Szűrési értékek inicializálása üresen
+            _selectedFilterValues = new FilterValues();//Szűrési értékek inicializálása üresen
         }
 
         public void Filter(DataView dataView)
         {
-            if (dataView is null)
+            if (dataView == null)
                 return;
 
             StringBuilder filterExpression = new StringBuilder();
             string logicOperation = " AND ";
-            if (!string.IsNullOrEmpty(SelectedFilterValues.Id))
+            if (!string.IsNullOrEmpty(_selectedFilterValues.Id))
             {
-                filterExpression.Append($"Id = {SelectedFilterValues.Id}");
+                filterExpression.Append($"Id = {_selectedFilterValues.Id}");
             }
 
-            if (!string.IsNullOrEmpty(SelectedFilterValues.Nev))
+            if (!string.IsNullOrEmpty(_selectedFilterValues.Nev))
             {
                 if (filterExpression.Length != 0)
                     filterExpression.Append(logicOperation);
-                filterExpression.Append($"Név = '{SelectedFilterValues.Nev}'");
+                filterExpression.Append($"Név = '{_selectedFilterValues.Nev}'");
             }
 
-            if (!string.IsNullOrEmpty(SelectedFilterValues.Szuletes))
+            if (!string.IsNullOrEmpty(_selectedFilterValues.Szuletes))
             {
                 if (filterExpression.Length != 0)
                     filterExpression.Append(logicOperation);
-                filterExpression.Append($"Születés = '{SelectedFilterValues.Szuletes}'");
+                filterExpression.Append($"Születés = '{_selectedFilterValues.Szuletes}'");
             }
 
-            if (!string.IsNullOrEmpty(SelectedFilterValues.Email))
+            if (!string.IsNullOrEmpty(_selectedFilterValues.Email))
             {
                 if (filterExpression.Length != 0)
                     filterExpression.Append(logicOperation);
-                filterExpression.Append($"Email = '{SelectedFilterValues.Email}'");
+                filterExpression.Append($"Email = '{_selectedFilterValues.Email}'");
             }
 
-            if (!string.IsNullOrEmpty(SelectedFilterValues.Telefon))
+            if (!string.IsNullOrEmpty(_selectedFilterValues.Telefon))
             {
                 if (filterExpression.Length != 0)
                     filterExpression.Append(logicOperation);
-                filterExpression.Append($"Telefon = '{SelectedFilterValues.Telefon}'");
+                filterExpression.Append($"Telefon = '{_selectedFilterValues.Telefon}'");
             }
 
-            if (!string.IsNullOrEmpty(SelectedFilterValues.Tisztseg))
+            if (!string.IsNullOrEmpty(_selectedFilterValues.Tisztseg))
             {
                 if (filterExpression.Length != 0)
                     filterExpression.Append(logicOperation);
-                filterExpression.Append($"Tisztség = '{SelectedFilterValues.Tisztseg}'");
+                filterExpression.Append($"Tisztség = '{_selectedFilterValues.Tisztseg}'");
             }
 
-            if (!string.IsNullOrEmpty(SelectedFilterValues.TagsagKezdete))
+            if (!string.IsNullOrEmpty(_selectedFilterValues.TagsagKezdete))
             {
                 if (filterExpression.Length != 0)
                     filterExpression.Append(logicOperation);
-                filterExpression.Append($"TagságKezdete= '{SelectedFilterValues.TagsagKezdete}'");
+                filterExpression.Append($"TagságKezdete= '{_selectedFilterValues.TagsagKezdete}'");
             }
 
-            if (!string.IsNullOrEmpty(SelectedFilterValues.Jogallas))
+            if (!string.IsNullOrEmpty(_selectedFilterValues.Jogallas))
             {
                 if (filterExpression.Length != 0)
                     filterExpression.Append(logicOperation);
-                filterExpression.Append($"Jogállás = '{SelectedFilterValues.Jogallas}'");
+                filterExpression.Append($"Jogállás = '{_selectedFilterValues.Jogallas}'");
             }
 
-            if (!string.IsNullOrEmpty(SelectedFilterValues.AdatokTipusa))
+            if (!string.IsNullOrEmpty(_selectedFilterValues.AdatokTipusa))
             {
                 if (filterExpression.Length != 0)
                     filterExpression.Append(logicOperation);
-                filterExpression.Append($"AdatokTípusa = '{SelectedFilterValues.AdatokTipusa}'");
+                filterExpression.Append($"AdatokTípusa = '{_selectedFilterValues.AdatokTipusa}'");
             }
 
-            if (!string.IsNullOrEmpty(SelectedFilterValues.Kepviselo))
+            if (!string.IsNullOrEmpty(_selectedFilterValues.Kepviselo))
             {
                 if (filterExpression.Length != 0)
                     filterExpression.Append(logicOperation);
-                if (SelectedFilterValues.Kepviselo == "Képviselő")
+                if (_selectedFilterValues.Kepviselo == "Képviselő")
                     filterExpression.Append($"Képviselő = True");
-                else if (SelectedFilterValues.Kepviselo == "Nem képviselő")
+                else if (_selectedFilterValues.Kepviselo == "Nem képviselő")
                     filterExpression.Append($"Képviselő = False");
             }
 
-            if (!string.IsNullOrEmpty(SelectedFilterValues.AdatokTipusa))
+            if (!string.IsNullOrEmpty(_selectedFilterValues.AdatokTipusa))
             {
                 if (filterExpression.Length != 0)
                     filterExpression.Append(logicOperation);
-                filterExpression.Append($"AdatokTípusa = '{SelectedFilterValues.AdatokTipusa}'");
+                filterExpression.Append($"AdatokTípusa = '{_selectedFilterValues.AdatokTipusa}'");
             }
 
-            if (!string.IsNullOrEmpty(SelectedFilterValues.Admin))
+            if (!string.IsNullOrEmpty(_selectedFilterValues.Admin))
             {
                 if (filterExpression.Length != 0)
                     filterExpression.Append(logicOperation);
-                if (SelectedFilterValues.Admin == "Admin")
+                if (_selectedFilterValues.Admin == "Admin")
                     filterExpression.Append($"Admin = True");
-                else if (SelectedFilterValues.Admin == "Nem admin")
+                else if (_selectedFilterValues.Admin == "Nem admin")
                     filterExpression.Append($"Képviselő = False");
             }
 
             dataView.RowFilter = filterExpression.ToString();
         }
 
-        [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Will cause the DataView to lose its content. DataView does not create copy of the data.")]
         public async Task UpdateFromSource()
         {
             _tagok?.Dispose();
-            DataTable tagokDT = await _dataAccess.FillTagokDataTableAsync().ConfigureAwait(true);
+            DataTable tagokDT = await _dataAccess.FillTagokDTAsync();
             Tagok = new DataView(tagokDT);
 
         }
 
-        [SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Will cause the DataView to lose its content. DataView does not create copy of the data.")]
         public async Task TagsagLejar()
         {
             _tagok?.Dispose();
-            DataTable tagokDT = await _dataAccess.GetLejaroTagsagokAsync(false).ConfigureAwait(true);//false=> hónapőban lejáró tagságok
+            DataTable tagokDT = await _dataAccess.LejaroTagsagok(false);//false=> hónapőban lejáró tagságok
             Tagok = new DataView(tagokDT);
         }
 
         public async Task Open()
         {
-            if (_selectedRow is null)
+            if (_selectedRow == null)
                 return;
 
             int selectedId = _selectedRow.Row.Field<int>("Id");
-            Tag tag = await _dataAccess.GetTagByIdAsync(selectedId).ConfigureAwait(true);
+            Tag tag = await _dataAccess.GetTag(selectedId);
 
             dynamic settings = new ExpandoObject();
             settings.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
             settings.ResizeMode = System.Windows.ResizeMode.CanResizeWithGrip;
             settings.Width = 600;
             settings.Title = tag.Nev;
-            await _windowManager.ShowWindowAsync(new TagViewModel(_dataAccess, IoC.Get<IMsgBoxService>(), tag), null, settings);
+            _windowManager.ShowWindow(new TagViewModel(_dataAccess, IoC.Get<IMsgBoxService>(), tag), null, settings);
         }
 
-        public async Task New()
+        public void New()
         {
             dynamic settings = new ExpandoObject();
             settings.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
@@ -167,25 +165,25 @@ namespace TagsagNyilvantarto.ViewModels
             settings.Width = 600;
             //settings.MinWidth = 450;
             settings.Title = "Új igény";
-            await _windowManager.ShowWindowAsync(new TagViewModel(_dataAccess, IoC.Get<IMsgBoxService>(), new Tag()), null, settings);
+            _windowManager.ShowWindow(new TagViewModel(_dataAccess, IoC.Get<IMsgBoxService>(), new Tag()), null, settings);
         }
 
         public async Task Delete()
         {
-            if (_selectedRow is null)
+            if (_selectedRow == null)
                 return;
 
             int selectedId = _selectedRow.Row.Field<int>("Id");
             bool confirm = _msgBoxService.AskForConfirmation("Biztosan törli a tagot?");
             int res = 0;
             if (confirm)
-                res = await _dataAccess.DeleteTagAsync(selectedId).ConfigureAwait(false);
+                res = await _dataAccess.DeleteTag(selectedId);
 
             if (res == 1)
                 _msgBoxService.ShowNotification("Tag sikeresen törölve.");
         }
 
-        public async Task SendMail()
+        public void SendMail()
         {
             dynamic settings = new ExpandoObject();
             settings.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
@@ -193,7 +191,7 @@ namespace TagsagNyilvantarto.ViewModels
             //settings.Width = 600;
             //settings.MinWidth = 450;
             settings.Title = "Köremail küldés";
-            await _windowManager.ShowWindowAsync(new TagokEmailViewModel(_dataAccess, IoC.Get<MsgBoxService>()), null, settings);
+            _windowManager.ShowWindow(new TagokEmailViewModel(_dataAccess, IoC.Get<MsgBoxService>()), null, settings);
         }
     }
 }

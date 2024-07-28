@@ -316,7 +316,7 @@ namespace TagsagNyilvantarto
             }
         }
 
-        public async Task<IEnumerable<TagokEmail>> GetAllEmailAddressesAsync()
+        public async Task<IEnumerable<TagokEmail>> GetAllEmailAddressAsync()
         {
             using (IDbConnection connection = CreateConnection())
             {
