@@ -1,19 +1,27 @@
-﻿using Caliburn.Micro;
+﻿using AsyncAwaitBestPractices;
+using Caliburn.Micro;
+using System;
 
 namespace TagsagNyilvantarto.ViewModels
 {
-    internal class ShellViewModel : Conductor<object>
+    internal sealed class ShellViewModel : Conductor<object>
     {
-        private IScreen _starupUi;
-        public ShellViewModel(Screen startupUi)
+        private readonly IScreen _starupUi;
+
+        public static ShellViewModel CreateShellViewModel(Screen startupUi)
         {
-            ShowStartupUI();
-            _starupUi = startupUi;
+            var shellViewModel = new ShellViewModel(startupUi);
+            // Aditional creation logic
+            return shellViewModel;
         }
+        private ShellViewModel(Screen startupUi) => _starupUi = startupUi;
+
 
         public void ShowStartupUI()
         {
-            ActivateItem(_starupUi);
+            ActivateItemAsync(_starupUi)
+                .SafeFireAndForget(ex =>
+                    IoC.Get<IMsgBoxService>().ShowError("Hiba történt a kezdő ablak megnyitása során! {newLine}Error: {exMessage}", Environment.NewLine, ex.Message), true);
         }
     }
 }
