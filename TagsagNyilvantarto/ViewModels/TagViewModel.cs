@@ -3,15 +3,16 @@ using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using TagsagNyilvantarto.Models;
 
 namespace TagsagNyilvantarto.ViewModels
 {
-    internal class TagViewModel : Screen
+    internal sealed class TagViewModel : Screen
     {
-        private DataAccess _dataAccess;
-        private IMsgBoxService _msgBoxService;
+        private readonly DataAccess _dataAccess;
+        private readonly IMsgBoxService _msgBoxService;
         private Tag _tag;
         private IList<TagsagAllapot> _tagsagAllapotok;
         private IList<TagsagAdattipus> _tagsagAdattipusok;
@@ -25,7 +26,7 @@ namespace TagsagNyilvantarto.ViewModels
             RefreshLists(dataAccess).SafeFireAndForget();
         }
 
-        public Tag Tag { get => _tag; set => _tag = value; }
+        public Tag Tag { get => _tag; set => _ = Set(ref _tag, value); }
         public IList<TagsagAllapot> TagsagAllapotok { get => _tagsagAllapotok; set => _ = Set(ref _tagsagAllapotok, value); }
         public IList<TagsagAdattipus> TagsagAdattipusok { get => _tagsagAdattipusok; set => _ = Set(ref _tagsagAdattipusok, value); }
         public IList<string> TagdijFizetesDatumok { get => _tagdijFizetesDatumok; set => _ = Set(ref _tagdijFizetesDatumok, value); }
@@ -33,49 +34,49 @@ namespace TagsagNyilvantarto.ViewModels
 
         public async Task RefreshLists(DataAccess dataAccess)
         {
-            TagsagAllapotok = (await dataAccess.GetAllTagsagAllapot().ConfigureAwait(false)).ToList();
-            TagsagAdattipusok = (await dataAccess.GetAllTagsagAdattipus().ConfigureAwait(false)).ToList();
-            TagdijFizetesDatumok = await dataAccess.TagdijFizetesek(Tag.Tag_id).ConfigureAwait(false);
+            TagsagAllapotok = (await dataAccess.GetAllTagsagAllapotAsync().ConfigureAwait(false)).ToList();
+            TagsagAdattipusok = (await dataAccess.GetAllTagsagAdattipusAsync().ConfigureAwait(false)).ToList();
+            TagdijFizetesDatumok = await dataAccess.GetTagdijFizetesekAsync(Tag.TagId).ConfigureAwait(false);
         }
         public async Task Save()
         {
 
-            //TODO: Check
-            if (_tag.Tag_id == default)
+            if (!CheckTag(Tag))
+                return;
+
+            if (_tag.TagId == default)
             {
-                _tag.Tag_id = await _dataAccess.InsertTag(_tag);
-                if (_tag.Tag_id > 0)
+                _tag.TagId = await _dataAccess.InsertTag(_tag).ConfigureAwait(true);
+                if (_tag.TagId > 0)
                 {
                     _msgBoxService.ShowNotification("Új tag sikeresen felvéve.");
 
                     //Tag beillesztése után nem sikerült a tag id-jét lekérdezni
                     //string date = DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day;
                     //int res = await _dataAccess.TagdijFizetve(_tag.Tag_id, date);
-                    //if(res==1)
+                    //if (res == 1)
                     //    _msgBoxService.ShowNotification("Új taghoz tagdíj fizetés rögzítve.");
                     //Tag = new Tag();
-                    this.TryClose();
+                    await TryCloseAsync().ConfigureAwait(true);
+                    return;
                 }
-                else
-                {
-                    _msgBoxService.ShowError("Új tag felvétele nem sikerült");
-                }
+
+                _msgBoxService.ShowError("Új tag felvétele nem sikerült");
+                return;
             }
-            else
+
+            int res = await _dataAccess.UpdateTag(_tag).ConfigureAwait(true);
+            if (res == 1)
             {
-                int res = await _dataAccess.UpdateTag(_tag);
-                if (res == 1)
-                {
-                    _msgBoxService.ShowNotification("Tag módosítása sikerült.");
-                    this.TryClose();
-                }
-                else
-                {
-                    _msgBoxService.ShowError("Tag módosítása nem sikerült.");
-                }
+                _msgBoxService.ShowNotification("Tag módosítása sikerült.");
+                await TryCloseAsync().ConfigureAwait(true);
+                return;
             }
+
+            _msgBoxService.ShowError("Tag módosítása nem sikerült.");
+
         }
-        private bool Check(Tag tag)
+        private bool CheckTag(Tag tag)
         {
             if (String.IsNullOrEmpty(tag.Nev))
             {
@@ -100,17 +101,19 @@ namespace TagsagNyilvantarto.ViewModels
                 _msgBoxService.ShowError("Telefonszám nincs megadva.");
                 return false;
             }
+
             if (String.IsNullOrEmpty(tag.Tisztseg))
             {
                 Tag.Tisztseg = "-";
             }
-            if (tag.TagsagAllapot == null)
+
+            if (tag.TagsagAllapot is null)
             {
                 _msgBoxService.ShowError("Tagság állapot megadása kötelező!");
                 return false;
             }
 
-            if (tag.AdatokTipusa == null)
+            if (tag.AdatokTipusa is null)
             {
                 _msgBoxService.ShowError("Tagsági adat típusának megadása kötelező megadása kötelező!");
                 return false;
@@ -122,25 +125,27 @@ namespace TagsagNyilvantarto.ViewModels
         }
         public async Task TagdijFizeteve()
         {
-            if (Tag.Tag_id == default)
+            if (Tag.TagId == default)
             {
                 _msgBoxService.ShowError("Tagdíj fizetés rögzítése előtt a tagot regisztrálni kell.\nKattintsa a mentés gombra, majd próbáld újra.");
                 return;
             }
+
             if (_fizetesDatuma == default)
             {
                 _msgBoxService.ShowError("Nincs dátum kiválasztva!");
                 return;
             }
-            string datum = FizetesDatuma.Year + "-" + FizetesDatuma.Month + "-" + FizetesDatuma.Day;
-            int res = await _dataAccess.TagdijFizetve(Tag.Tag_id, datum);
+
+            string datum = $"{FizetesDatuma.Year}-{FizetesDatuma.Month}-{FizetesDatuma.Day}";
+            int res = await _dataAccess.InsertTagdijFizetesAsync(Tag.TagId, datum).ConfigureAwait(false);
 
             if (res == 1)
                 _msgBoxService.ShowNotification("Tagdíjfeieztés sikeresen rögzítve.");
             else
                 _msgBoxService.ShowError("Tagdíjfizetés rögzítése nem sikerült.");
 
-            TagdijFizetesDatumok = await _dataAccess.TagdijFizetesek(Tag.Tag_id);
+            TagdijFizetesDatumok = await _dataAccess.GetTagdijFizetesekAsync(Tag.TagId).ConfigureAwait(true);
         }
 
         public async Task Delete()
@@ -148,15 +153,15 @@ namespace TagsagNyilvantarto.ViewModels
             bool confirm = _msgBoxService.AskForConfirmation("Biztosan törli a tagot?");
             int res = 0;
             if (confirm)
-                res = await _dataAccess.DeleteTag(Tag.Tag_id);
+                res = await _dataAccess.DeleteTagAsync(Tag.TagId).ConfigureAwait(false);
 
             if (res == 1)
                 _msgBoxService.ShowNotification("Tag sikeresen törölve.");
 
-            this.TryClose();
+            await TryCloseAsync().ConfigureAwait(true);
         }
         public void SendMail()
-        {  
+        {
             try
             {
                 Microsoft.Office.Interop.Outlook.Application outlookApp = new Microsoft.Office.Interop.Outlook.Application();
@@ -167,9 +172,13 @@ namespace TagsagNyilvantarto.ViewModels
                 //mailItem.Display(true);
                 mailItem.Display();
             }
+            catch (COMException comEx)
+            {
+                IoC.Get<IMsgBoxService>().ShowError("Hiba az emal létrehozása során! {newLine}{Error COM exception: {exMessage]}", Environment.NewLine, comEx.Message);
+            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                IoC.Get<IMsgBoxService>().ShowError("Hiba az emal létrehozása során! {newLine}{Error: {exMessage]}", Environment.NewLine, ex.Message);
             }
         }
     }

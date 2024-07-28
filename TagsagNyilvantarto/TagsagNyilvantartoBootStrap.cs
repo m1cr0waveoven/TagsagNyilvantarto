@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using TagsagNyilvantarto.ViewModels;
+using AsyncAwaitBestPractices;
 
 namespace TagsagNyilvantarto
 {
@@ -13,7 +14,7 @@ namespace TagsagNyilvantarto
             Initialize();
         }
 
-        private SimpleContainer _container = new SimpleContainer();
+        private readonly SimpleContainer _container = new SimpleContainer();
         protected override object GetInstance(Type service, string key)
         {
             return _container.GetInstance(service, key);
@@ -41,11 +42,11 @@ namespace TagsagNyilvantarto
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             Screen startupUi = _container.GetInstance<TagokViewModel>();
-            ShellViewModel shellViewModel = new ShellViewModel(startupUi);
+            ShellViewModel shellViewModel = ShellViewModel.CreateShellViewModel(startupUi);
             _container.RegisterInstance(shellViewModel.GetType(), "shellvm", shellViewModel);
             IWindowManager windowManager = _container.GetInstance<IWindowManager>();
+            windowManager.ShowWindowAsync(shellViewModel).SafeFireAndForget(ex => IoC.Get<IMsgBoxService>().ShowError("Hiba az ablak megnyitása során! {newLine}Error: {exMessage}", Environment.NewLine, ex.Message), continueOnCapturedContext: true);
             shellViewModel.ShowStartupUI();
-            windowManager.ShowWindow(shellViewModel);
             //DisplayRootViewFor<ShellViewModel>();
         }
     }
