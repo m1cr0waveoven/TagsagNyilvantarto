@@ -1,0 +1,4 @@
+CREATE TRIGGER after_tag_insert AFTER INSERT
+ON tagok
+FOR EACH ROW
+INSERT INTO tagdij_fizetesek (tag_id, fizetve) VALUES (NEW.tag_id, NOW());

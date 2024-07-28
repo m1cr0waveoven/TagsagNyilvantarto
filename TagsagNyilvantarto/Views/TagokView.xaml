@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="TagsagNyilvantarto.Views.TagokView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TagsagNyilvantarto.Views"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="1200">
+    <Grid Background="AliceBlue">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Row="0">
+            <WrapPanel>
+                <TextBlock Text="Hello" FontSize="14"/>
+            </WrapPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="1">
+            <DataGrid x:Name="Tagok" AlternatingRowBackground="BurlyWood" SelectedItem="{Binding SelectedRow}"  Style="{StaticResource dgStyle}" Loaded="Tagok_Loaded" LoadingRow="Tagok_LoadingRow"
+                  cal:Message.Attach="[Event MouseDoubleClick] = [Action Open()]" SelectedIndex="0" MinHeight="300">
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Header="Kiválaszt"/>
+                    <DataGridTextColumn Binding="{Binding Id}" Header="Id"/>
+                    <DataGridTextColumn Binding="{Binding Név}" Header="Név"/>
+                    <DataGridTextColumn Binding="{Binding Születés}" Header="Születés"/>
+                    <DataGridTextColumn Binding="{Binding Email}" Header="Email"/>
+                    <DataGridTextColumn Binding="{Binding Telefon}" Header="Telefon"/>
+                    <DataGridTextColumn Binding="{Binding Tisztség}" Header="Tisztség"/>
+                    <DataGridTextColumn Binding="{Binding TagságKezdete}" Header="Tagság kezdete"/>
+                    <DataGridTextColumn Binding="{Binding Jogállás}" Header="Tagság jogállása"/>
+                    <DataGridTextColumn Binding="{Binding Fizetve}" Header="Tagdíj fizetve"/>
+                    <DataGridTextColumn Binding="{Binding AdatokTípusa}" Header="AdatokTípusa"/>
+                    <DataGridCheckBoxColumn Binding="{Binding Képviselő}" Header="Képviselő"/>
+                    <DataGridCheckBoxColumn Binding="{Binding Admin}" Header="Admin"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+        <StackPanel Grid.Row="2">
+            <WrapPanel>
+                <Button x:Name="UpdateFromSource" Style="{StaticResource btnStyle}" Content="Frissítés" Width="100" Margin="5"/>
+                <Button x:Name="TagsagLejar" Style="{StaticResource btnStyle}" Content="Lejáró tagságok" Width="120" Margin="5"/>
+                <Button x:Name="Open" Style="{StaticResource btnStyle}" Content="Megnyitás" Width="120" Margin="5"/>
+                <Button x:Name="New" Style="{StaticResource btnStyle}" Content="Új tag" Width="120" Margin="5"/>
+                <Button x:Name="Delete" Style="{StaticResource btnStyle}" Content="Törlés" Width="120" Margin="5"/>
+                <Button  x:Name="SendMail" Style="{StaticResource btnStyle}" Content="Email küldése" Width="120" Margin="5"/>
+            </WrapPanel>
+        </StackPanel>
+
+    </Grid>
+</UserControl>
