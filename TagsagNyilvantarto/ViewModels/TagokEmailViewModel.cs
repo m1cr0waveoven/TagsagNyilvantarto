@@ -8,14 +8,14 @@ using TagsagNyilvantarto.Models;
 
 namespace TagsagNyilvantarto.ViewModels
 {
-    class TagokEmailViewModel : PropertyChangedBase
+    internal class TagokEmailViewModel : PropertyChangedBase
     {
-        ObservableCollection<TagokEmail> _tagokEmails;
-        ObservableCollection<TagokEmail> _selectedTags;
-        TagokEmail _selectedTag;
-        TagokEmail _selectedTag2;
-        DataAccess _dataAccess;
-        MsgBoxService _msgBoxService;
+        private ObservableCollection<TagokEmail> _tagokEmails;
+        private ObservableCollection<TagokEmail> _selectedTags;
+        private TagokEmail _selectedTag;
+        private TagokEmail _selectedTag2;
+        private DataAccess _dataAccess;
+        private MsgBoxService _msgBoxService;
 
         public TagokEmailViewModel(DataAccess dataAccess, MsgBoxService msgBoxService)
         {

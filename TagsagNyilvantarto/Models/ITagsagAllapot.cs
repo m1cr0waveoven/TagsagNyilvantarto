@@ -1,6 +1,6 @@
 ﻿namespace TagsagNyilvantarto.Models
 {
-    interface ITagsagAllapot
+    internal interface ITagsagAllapot
     {
         string Allapot { get; set; }
         int Id { get; set; }

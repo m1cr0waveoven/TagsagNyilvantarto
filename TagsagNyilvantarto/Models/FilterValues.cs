@@ -2,7 +2,7 @@
 
 namespace TagsagNyilvantarto.Models
 {
-    class FilterValues : PropertyChangedBase
+    internal class FilterValues : PropertyChangedBase
     {
         private string _id;
         private string _nev;

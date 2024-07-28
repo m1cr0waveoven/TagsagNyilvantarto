@@ -2,9 +2,9 @@
 
 namespace TagsagNyilvantarto.ViewModels
 {
-    class ShellViewModel : Conductor<object>
+    internal class ShellViewModel : Conductor<object>
     {
-        IScreen _starupUi;
+        private IScreen _starupUi;
         public ShellViewModel(Screen startupUi)
         {
             ShowStartupUI();

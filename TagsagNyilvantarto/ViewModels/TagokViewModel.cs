@@ -7,15 +7,14 @@ using TagsagNyilvantarto.Models;
 
 namespace TagsagNyilvantarto.ViewModels
 {
-    class TagokViewModel : Screen
+    internal class TagokViewModel : Screen
     {
         private FilterValues _selectedFilterValues;
-
-        DataAccess _dataAccess;
-        IWindowManager _windowManager;
-        IMsgBoxService _msgBoxService;
-        DataView _tagok;
-        DataRowView _selectedRow;
+        private DataAccess _dataAccess;
+        private IWindowManager _windowManager;
+        private IMsgBoxService _msgBoxService;
+        private DataView _tagok;
+        private DataRowView _selectedRow;
         public FilterValues SelectedFilterValues { get => _selectedFilterValues; set => _selectedFilterValues = value; }
         public DataView Tagok { get => _tagok; set => _ = Set(ref _tagok, value); }
         public DataAccess DataAccess { get => _dataAccess; private set => _dataAccess = value; }

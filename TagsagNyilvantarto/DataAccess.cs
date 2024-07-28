@@ -13,22 +13,22 @@ using TagsagNyilvantarto.Models;
 
 namespace TagsagNyilvantarto
 {
-    class DataAccess : PropertyChangedBase
+    internal class DataAccess : PropertyChangedBase
     {
-        IDbConnection _mysqlConnection;
-        string connectionString = String.Empty;
+        private IDbConnection _mysqlConnection;
+        private string connectionString = String.Empty;
         #region Fields
-        IEnumerable<string> _idk;
-        IEnumerable<string> _nevek;
-        IEnumerable<string> _szuletesek;
-        IEnumerable<string> _emailek;
-        IEnumerable<string> _telefonok;
-        IEnumerable<string> _tisztsegek;
-        IEnumerable<string> _tagsagkezdetek;
-        IEnumerable<string> _tagsagjogallasok;
-        IEnumerable<string> _adattipusok;
-        string[] _kepviselo;
-        string[] _admin;
+        private IEnumerable<string> _idk;
+        private IEnumerable<string> _nevek;
+        private IEnumerable<string> _szuletesek;
+        private IEnumerable<string> _emailek;
+        private IEnumerable<string> _telefonok;
+        private IEnumerable<string> _tisztsegek;
+        private IEnumerable<string> _tagsagkezdetek;
+        private IEnumerable<string> _tagsagjogallasok;
+        private IEnumerable<string> _adattipusok;
+        private string[] _kepviselo;
+        private string[] _admin;
         #endregion
 
         #region Properties

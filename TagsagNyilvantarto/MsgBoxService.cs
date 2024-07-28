@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace TagsagNyilvantarto
 {
-    class MsgBoxService : IMsgBoxService
+    internal class MsgBoxService : IMsgBoxService
     {
         public void ShowNotification(string message)
         {

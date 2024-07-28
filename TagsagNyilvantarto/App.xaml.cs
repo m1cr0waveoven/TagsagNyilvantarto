@@ -17,10 +17,10 @@ namespace TagsagNyilvantarto
     /// </summary>
     public partial class App : Application
     {
-        object _dgDataContext;
-        object _dataAccess;
-        PropertyInfo[] _propertyInfos;
-        Dictionary<string, string> keyValuePairs = new Dictionary<string, string>(capacity: 9);
+        private object _dgDataContext;
+        private object _dataAccess;
+        private PropertyInfo[] _propertyInfos;
+        private Dictionary<string, string> keyValuePairs = new Dictionary<string, string>(capacity: 9);
         public App()
         {
             //Oszlop fejlécnevek és property nevek összerendelése

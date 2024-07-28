@@ -1,6 +1,6 @@
 ﻿namespace TagsagNyilvantarto
 {
-    interface IMsgBoxService
+    internal interface IMsgBoxService
     {
         bool AskForConfirmation(string message);
         void ShowError(string message);

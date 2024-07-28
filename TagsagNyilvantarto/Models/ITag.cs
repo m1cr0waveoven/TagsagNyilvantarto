@@ -2,7 +2,7 @@
 
 namespace TagsagNyilvantarto.Models
 {
-    interface ITag
+    internal interface ITag
     {
         TagsagAdattipus AdatokTipusa { get; set; }
         bool Admin { get; set; }

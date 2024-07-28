@@ -6,7 +6,7 @@ using TagsagNyilvantarto.ViewModels;
 
 namespace TagsagNyilvantarto
 {
-    class TagsagNyilvantartoBootStrap : BootstrapperBase
+    internal class TagsagNyilvantartoBootStrap : BootstrapperBase
     {
         public TagsagNyilvantartoBootStrap()
         {

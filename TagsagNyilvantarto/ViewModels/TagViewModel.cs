@@ -8,15 +8,15 @@ using TagsagNyilvantarto.Models;
 
 namespace TagsagNyilvantarto.ViewModels
 {
-    class TagViewModel : Screen
+    internal class TagViewModel : Screen
     {
-        DataAccess _dataAccess;
-        IMsgBoxService _msgBoxService;
-        Tag _tag;
-        IList<TagsagAllapot> _tagsagAllapotok;
-        IList<TagsagAdattipus> _tagsagAdattipusok;
-        IList<string> _tagdijFizetesDatumok;
-        DateTime _fizetesDatuma = DateTime.Now;
+        private DataAccess _dataAccess;
+        private IMsgBoxService _msgBoxService;
+        private Tag _tag;
+        private IList<TagsagAllapot> _tagsagAllapotok;
+        private IList<TagsagAdattipus> _tagsagAdattipusok;
+        private IList<string> _tagdijFizetesDatumok;
+        private DateTime _fizetesDatuma = DateTime.Now;
         public TagViewModel(DataAccess dataAccess, IMsgBoxService msgBoxService, Tag tag)
         {
             _dataAccess = dataAccess;

@@ -5,19 +5,19 @@ using System;
 namespace TagsagNyilvantarto.Models
 {
     [Table("tagokok")]
-    class Tag : PropertyChangedBase, ITag
+    internal class Tag : PropertyChangedBase, ITag
     {
-        int tag_id;
-        string nev = string.Empty;
-        DateTime? szuletesi_datum;
-        string email=string.Empty;
-        string telefon = string.Empty;
-        string tisztseg = string.Empty;
-        DateTime? tagsga_kezdete;
-        TagsagAdattipus adatok_tipusa;
-        bool admin;
-        bool kepviselo;
-        TagsagAllapot tagsag_allapot;
+        private int tag_id;
+        private string nev = string.Empty;
+        private DateTime? szuletesi_datum;
+        private string email=string.Empty;
+        private string telefon = string.Empty;
+        private string tisztseg = string.Empty;
+        private DateTime? tagsga_kezdete;
+        private TagsagAdattipus adatok_tipusa;
+        private bool admin;
+        private bool kepviselo;
+        private TagsagAllapot tagsag_allapot;
         //DateTime _tagdij_fizetve;
 
         [Key]

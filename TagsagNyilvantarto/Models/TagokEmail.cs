@@ -2,10 +2,10 @@
 
 namespace TagsagNyilvantarto.Models
 {
-    class TagokEmail : PropertyChangedBase
+    internal class TagokEmail : PropertyChangedBase
     {
-        string _nev;
-        string _email;
+        private string _nev;
+        private string _email;
 
         public string Nev { get => _nev; set => _ = Set(ref _nev, value); }
         public string Email { get => _email; set => _ = Set(ref _email, value); }

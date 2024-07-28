@@ -4,10 +4,10 @@ using Dapper.Contrib.Extensions;
 namespace TagsagNyilvantarto.Models
 {
     [Table("tagsag_allapotok")]
-    class TagsagAllapot : PropertyChangedBase, ITagsagAllapot
+    internal class TagsagAllapot : PropertyChangedBase, ITagsagAllapot
     {
-        int id;
-        string allapot;
+        private int id;
+        private string allapot;
 
         [Key]
         public int Id { get => id; set => _ = Set(ref id, value); }

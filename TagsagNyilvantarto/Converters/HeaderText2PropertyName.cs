@@ -6,9 +6,9 @@ using System.Windows.Data;
 namespace TagsagNyilvantarto.Converters
 {
     [ValueConversion(typeof(string), typeof(string))]
-    class HeaderText2PropertyName : IValueConverter
+    internal class HeaderText2PropertyName : IValueConverter
     {
-        Dictionary<string, string> keyValuePairs = new Dictionary<string, string>(capacity: 9);
+        private Dictionary<string, string> keyValuePairs = new Dictionary<string, string>(capacity: 9);
         public HeaderText2PropertyName()
         {
             keyValuePairs.Add("Id", "DataAccess.Idk");
