@@ -117,15 +117,11 @@ namespace TagsagNyilvantarto
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "Method will pass on the reference of the DataTable.")]
         public async Task<DataTable> FillTagokDataTableAsync()
         {
             using (IDbConnection connection = CreateConnection())
             {
-                //string sql = "SELECT tagok.tag_id As Id, nev As Név, DATE_FORMAT(szuletes_datuma, '%Y.%m.%d.') As Születés, email As Email, telefon As Telefon, tisztseg As Tisztség, " +
-                //    "DATE_FORMAT(tagsag_kezdete, '%Y.%m.%d.') As TagságKezdete, DATE_FORMAT(Tagdijfizetesek.Fizetve, '%Y.%m.%d.') As Fizetve, tagsag_allapotok.allapot As Jogállás, tagsagi_adattipusok.tipus As AdatokTípusa, kepviselo As Képviselő, " +
-                //    "admin As Admin FROM tagok INNER JOIN tagsag_allapotok ON tagok.tagsag_allapot=tagsag_allapotok.id INNER JOIN tagsagi_adattipusok ON tagok.adatok_tipusa = tagsagi_adattipusok.id " +
-                //    "LEFT JOIN (SELECT tag_id, MAX(fizetve) As Fizetve FROM tagdij_fizetesek GROUP BY tag_id) As Tagdijfizetesek ON tagok.tag_id=Tagdijfizetesek.tag_id;";
-
                 var queryBuilder = new StringBuilder()
                    .Append("SELECT tagok.tag_id As Id, nev As Név, DATE_FORMAT(szuletes_datuma, '%Y.%m.%d.') As Születés, email As Email, telefon As Telefon, tisztseg As Tisztség, ")
                    .Append("DATE_FORMAT(tagsag_kezdete, '%Y.%m.%d.') As TagságKezdete, DATE_FORMAT(Tagdijfizetesek.Fizetve, '%Y.%m.%d.') As Fizetve, ")
@@ -144,7 +140,6 @@ namespace TagsagNyilvantarto
         }
         private void UpdateFilterLists(DataTable tagokDT)
         {
-            IEnumerable<DataRow> igenyeEnum = tagokDT.AsEnumerable();
             Idk = tagokDT.GetDistinctValuesFromColumn<int>("Id").Select(i => i.ToString());
             Nevek = tagokDT.GetDistinctValuesFromColumn<string>("Név");
             Szuletesek = tagokDT.GetDistinctValuesFromColumn<string>("Születés");
@@ -163,7 +158,7 @@ namespace TagsagNyilvantarto
             Tag tag;
             using (IDbConnection connection = CreateConnection())
             {
-                string sql = "SELECT tag_id As Tag_id, nev As Nev, DATE_FORMAT(szuletes_datuma, '%Y.%m.%d.') As SzuletesiDatum, email As Email, telefon As Telefon, tisztseg As Tisztseg, DATE_FORMAT(tagsag_kezdete, '%Y.%m.%d.') As TagsagKezdete, kepviselo As Kepviselo, admin As Admin FROM tagok WHERE tag_id=@Id;";
+                string sql = "SELECT tag_id As TagId, nev As Nev, DATE_FORMAT(szuletes_datuma, '%Y.%m.%d.') As SzuletesiDatum, email As Email, telefon As Telefon, tisztseg As Tisztseg, DATE_FORMAT(tagsag_kezdete, '%Y.%m.%d.') As TagsagKezdete, kepviselo As Kepviselo, admin As Admin FROM tagok WHERE tag_id=@Id;";
                 tag = await connection.QueryFirstAsync<Tag>(sql, new { Id }).ConfigureAwait(false);
                 sql = "SELECT id As Id, allapot As Allapot FROM tagsag_allapotok WHERE id=(SELECT tagsag_allapot FROM tagok WHERE tag_id=@Id);";
                 tag.TagsagAllapot = await connection.QueryFirstAsync<TagsagAllapot>(sql, new { Id }).ConfigureAwait(false);
@@ -193,11 +188,12 @@ namespace TagsagNyilvantarto
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "Query accepts no user input.")]
         public async Task<DataTable> GetLejaroTagsagokAsync(bool lejart)
         {
             using (IDbConnection connection = CreateConnection())
             {
-                int kulonbseg = (lejart) ? 10000 : 9973; //true : false
+                int kulonbseg = lejart ? 10000 : 9973; //true : false
 
                 var queryBuilder = new StringBuilder()
                    .Append("SELECT tagok.tag_id As Id, nev As Név, DATE_FORMAT(szuletes_datuma, '%Y.%m.%d.') As Születés, email As Email, telefon As Telefon, tisztseg As Tisztség, ")
@@ -308,7 +304,7 @@ namespace TagsagNyilvantarto
 
         public async Task<int> DeleteTagAsync(int tag_id)
         {
-            //tag törlésével tagdij_fizetesek táblából is törlődnek a hozzátartozó sorok
+            // tag törlésével tagdij_fizetesek táblából is törlődnek a hozzátartozó sorok
             using (IDbConnection connection = CreateConnection())
             {
                 string sql = "DELETE FROM tagok WHERE tag_id=@tag_id;";
