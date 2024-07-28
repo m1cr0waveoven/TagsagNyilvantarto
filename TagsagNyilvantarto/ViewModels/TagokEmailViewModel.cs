@@ -8,21 +8,21 @@ using TagsagNyilvantarto.Models;
 
 namespace TagsagNyilvantarto.ViewModels
 {
-    internal class TagokEmailViewModel : PropertyChangedBase
+    internal sealed class TagokEmailViewModel : PropertyChangedBase
     {
         private ObservableCollection<TagokEmail> _tagokEmails;
         private ObservableCollection<TagokEmail> _selectedTags;
         private TagokEmail _selectedTag;
         private TagokEmail _selectedTag2;
-        private DataAccess _dataAccess;
-        private MsgBoxService _msgBoxService;
+        private readonly DataAccess _dataAccess;
+        private readonly MsgBoxService _msgBoxService;
 
         public TagokEmailViewModel(DataAccess dataAccess, MsgBoxService msgBoxService)
         {
             _dataAccess = dataAccess;
             _msgBoxService = msgBoxService;
             _selectedTags = new ObservableCollection<TagokEmail>();
-            GetData().SafeFireAndForget();
+            GetEmailAddresses().SafeFireAndForget();
         }
 
         public ObservableCollection<TagokEmail> TagokEmails { get => _tagokEmails; set => _ = Set(ref _tagokEmails, value); }
@@ -30,14 +30,15 @@ namespace TagsagNyilvantarto.ViewModels
         public TagokEmail SelectedTag { get => _selectedTag; set => _ = Set(ref _selectedTag, value); }
         public TagokEmail SelectedTag2 { get => _selectedTag2; set => _ = Set(ref _selectedTag2, value); }
 
-        private async Task GetData()
+        private async Task GetEmailAddresses()
         {
-            TagokEmails = new ObservableCollection<TagokEmail>(await _dataAccess.GetAllEmailAddress());
+            var allEmailAddress = await _dataAccess.GetAllEmailAddressesAsync().ConfigureAwait(true);
+            TagokEmails = new ObservableCollection<TagokEmail>(allEmailAddress);
         }
 
         public void Add()
         {
-            if (SelectedTag == null)
+            if (SelectedTag is null)
                 return;
 
             _selectedTags.Add(SelectedTag);
@@ -48,7 +49,7 @@ namespace TagsagNyilvantarto.ViewModels
         {
             foreach (TagokEmail item in _tagokEmails)
             {
-                SelectedTags.Add(item);   
+                SelectedTags.Add(item);
             }
             TagokEmails.Clear();
         }
@@ -101,7 +102,7 @@ namespace TagsagNyilvantarto.ViewModels
             foreach (TagokEmail item in _selectedTags)
             {
                 _selectedMailAdresses.Append(item.Email);
-                _selectedMailAdresses.Append(";");
+                _selectedMailAdresses.Append(';');
             }
 
             return _selectedMailAdresses.ToString();
@@ -126,7 +127,7 @@ namespace TagsagNyilvantarto.ViewModels
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                _msgBoxService.ShowError($"E-mail létrehozása nem sikerült!{Environment.NewLine}{ex.Message}");
             }
         }
 
