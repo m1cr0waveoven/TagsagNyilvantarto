@@ -56,7 +56,7 @@ namespace TagsagNyilvantarto
                 {
                     return await connection.ExecuteAsync(command).ConfigureAwait(false);
                 }
-                catch (MySql.Data.MySqlClient.MySqlException ex)
+                catch (MySqlException ex)
                 {
                     System.Diagnostics.Debug.WriteLine(ex.Message);
                     throw;
@@ -145,15 +145,15 @@ namespace TagsagNyilvantarto
         private void UpdateFilterLists(DataTable tagokDT)
         {
             IEnumerable<DataRow> igenyeEnum = tagokDT.AsEnumerable();
-            Idk = tagokDT.GetDistinctValues<int>("Id").Select(i => i.ToString());
-            Nevek = tagokDT.GetDistinctValues<string>("Név");
-            Szuletesek = tagokDT.GetDistinctValues<string>("Születés");
-            Emailek = tagokDT.GetDistinctValues<string>("Email");
-            Telefonok = tagokDT.GetDistinctValues<string>("Telefon");
-            Tisztsegek = tagokDT.GetDistinctValues<string>("Tisztség");
-            Tagsagkezdetek = tagokDT.GetDistinctValues<string>("TagságKezdete");
-            Tagsagjogallasok = tagokDT.GetDistinctValues<string>("Jogállás");
-            Adattipusok = tagokDT.GetDistinctValues<string>("AdatokTípusa");
+            Idk = tagokDT.GetDistinctValuesFromColumn<int>("Id").Select(i => i.ToString());
+            Nevek = tagokDT.GetDistinctValuesFromColumn<string>("Név");
+            Szuletesek = tagokDT.GetDistinctValuesFromColumn<string>("Születés");
+            Emailek = tagokDT.GetDistinctValuesFromColumn<string>("Email");
+            Telefonok = tagokDT.GetDistinctValuesFromColumn<string>("Telefon");
+            Tisztsegek = tagokDT.GetDistinctValuesFromColumn<string>("Tisztség");
+            Tagsagkezdetek = tagokDT.GetDistinctValuesFromColumn<string>("TagságKezdete");
+            Tagsagjogallasok = tagokDT.GetDistinctValuesFromColumn<string>("Jogállás");
+            Adattipusok = tagokDT.GetDistinctValuesFromColumn<string>("AdatokTípusa");
             Kepviselo = new string[] { "Képviselő", "Nem képviselő" };
             Admin = new string[] { "Admin", "Nem admin" };
         }
