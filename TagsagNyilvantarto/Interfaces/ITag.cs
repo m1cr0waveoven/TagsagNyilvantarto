@@ -1,6 +1,7 @@
 ﻿using System;
+using TagsagNyilvantarto.Models;
 
-namespace TagsagNyilvantarto.Models
+namespace TagsagNyilvantarto.Interfaces
 {
     internal interface ITag
     {
@@ -9,7 +10,7 @@ namespace TagsagNyilvantarto.Models
         string Email { get; set; }
         string Nev { get; set; }
         DateTime? SzuletesiDatum { get; set; }
-        int Tag_id { get; set; }
+        int TagId { get; set; }
         TagsagAllapot TagsagAllapot { get; set; }
         DateTime? TagsagKezdete { get; set; }
         string Telefon { get; set; }

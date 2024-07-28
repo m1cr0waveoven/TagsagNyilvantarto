@@ -1,4 +1,4 @@
-﻿namespace TagsagNyilvantarto.Models
+﻿namespace TagsagNyilvantarto.Interfaces
 {
     internal interface ITagsagAllapot
     {
