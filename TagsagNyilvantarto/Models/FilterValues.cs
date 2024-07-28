@@ -2,7 +2,7 @@
 
 namespace TagsagNyilvantarto.Models
 {
-    internal class FilterValues : PropertyChangedBase
+    internal sealed class FilterValues : PropertyChangedBase
     {
         private string _id;
         private string _nev;
@@ -15,7 +15,6 @@ namespace TagsagNyilvantarto.Models
         private string _adatoktipusa;
         private string _kepviselo;
         private string _admin;
-
 
         public string Id { get => _id; set => _ = Set(ref _id, value); }
         public string Nev { get => _nev; set => _ = Set(ref _nev, value); }

@@ -2,7 +2,7 @@
 
 namespace TagsagNyilvantarto.Models
 {
-    internal class TagokEmail : PropertyChangedBase
+    internal sealed class TagokEmail : PropertyChangedBase
     {
         private string _nev;
         private string _email;
@@ -13,7 +13,7 @@ namespace TagsagNyilvantarto.Models
         public string DisplayFormat { get => this.ToString(); }
         public override string ToString()
         {
-            return Nev + " - " + Email;
+            return $"{Nev} - {Email}";
         }
     }
 }

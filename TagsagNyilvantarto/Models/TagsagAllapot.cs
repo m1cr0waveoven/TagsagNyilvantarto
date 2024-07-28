@@ -1,16 +1,17 @@
 ﻿using Caliburn.Micro;
 using Dapper.Contrib.Extensions;
+using TagsagNyilvantarto.Interfaces;
 
 namespace TagsagNyilvantarto.Models
 {
     [Table("tagsag_allapotok")]
-    internal class TagsagAllapot : PropertyChangedBase, ITagsagAllapot
+    internal sealed class TagsagAllapot : PropertyChangedBase, ITagsagAllapot
     {
-        private int id;
-        private string allapot;
+        private int _id;
+        private string _allapot;
 
         [Key]
-        public int Id { get => id; set => _ = Set(ref id, value); }
-        public string Allapot { get => allapot; set => _ = Set(ref allapot, value); }
+        public int Id { get => _id; set => _ = Set(ref _id, value); }
+        public string Allapot { get => _allapot; set => _ = Set(ref _allapot, value); }
     }
 }
