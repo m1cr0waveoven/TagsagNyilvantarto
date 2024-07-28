@@ -1,8 +1,7 @@
-﻿namespace TagsagNyilvantarto.Interfaces
+﻿namespace TagsagNyilvantarto.Interfaces;
+
+internal interface ITagsagAllapot
 {
-    internal interface ITagsagAllapot
-    {
-        string Allapot { get; set; }
-        int Id { get; set; }
-    }
+    string Allapot { get; set; }
+    int Id { get; set; }
 }

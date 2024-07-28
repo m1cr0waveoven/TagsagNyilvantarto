@@ -1,15 +1,14 @@
 ﻿using System.Windows;
 
-namespace TagsagNyilvantarto.Views
+namespace TagsagNyilvantarto.Views;
+
+/// <summary>
+/// Interaction logic for UjTagView.xaml
+/// </summary>
+public partial class TagView : Window
 {
-    /// <summary>
-    /// Interaction logic for UjTagView.xaml
-    /// </summary>
-    public partial class TagView : Window
+    public TagView()
     {
-        public TagView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }
