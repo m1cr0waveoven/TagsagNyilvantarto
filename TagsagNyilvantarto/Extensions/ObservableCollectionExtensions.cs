@@ -1,22 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace TagsagNyilvantarto.Extensions;
 internal static class ObservableCollectionExtensions
 {
-    public static ObservableCollection<T> ToObeservableCollection<T>(this IEnumerable<T> enumerable) => new ObservableCollection<T>(enumerable);
+    public static ObservableCollection<T> ToObeservableCollection<T>(this IEnumerable<T> enumerable) => [.. enumerable];
 
-    public static ObservableCollection<T> AddRange<T>(this ObservableCollection<T> observalbeCollection, IEnumerable<T> itemToAdd)
+    public static ObservableCollection<T> AddRange<T>(this ObservableCollection<T> observalbeCollection, IEnumerable<T> itemsToAdd)
     {
-        itemToAdd ??= Enumerable.Empty<T>();
-        if (observalbeCollection is null || observalbeCollection.Count == 0)
-            return new ObservableCollection<T>(itemToAdd);
+        itemsToAdd ??= [];
+        if (observalbeCollection is null)
+            return [.. itemsToAdd];
 
-        foreach (T item in itemToAdd)
-        {
+        foreach (T item in itemsToAdd)
             observalbeCollection.Add(item);
-        }
+
         return observalbeCollection;
     }
 }
