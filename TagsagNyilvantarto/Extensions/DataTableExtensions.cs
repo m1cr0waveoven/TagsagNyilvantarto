@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 
@@ -11,11 +10,10 @@ public static class DataTableExtensions
     public static IEnumerable<TSource> GetValuesFromColumn<TSource>(this DataTable dataTable, string colName)
     {
         if (dataTable is null || dataTable.Rows.Count == 0)
-            return Enumerable.Empty<TSource>();
+            return Array.Empty<TSource>();
 
-        IEnumerable<DataRow> rows = dataTable.AsEnumerable();
         if (dataTable.Columns[colName].DataType == typeof(TSource))
-            return rows.Select(r => r.Field<TSource>(colName));
+            return dataTable.AsEnumerable().Select(r => r.Field<TSource>(colName));
 
         throw new MissingFieldException("Field was not found in the table with this name and type.", colName);
     }
@@ -34,7 +32,5 @@ public static class DataTableExtensions
         return colNames.AsReadOnly();
     }
 
-    public static DataView ToDataView(this DataTable dataTable) => new DataView(dataTable);
-
-    public static TOut As<TIn, TOut>(TIn @in) where TIn : class where TOut : class => @in as TOut;
+    public static DataView ToDataView(this DataTable dataTable) => new(dataTable);
 }
